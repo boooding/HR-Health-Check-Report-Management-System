@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--  Import the icon/logo  -->
+    <link rel="shortcut icon" href="favicon.ico" >
+    <!--  css stylesheet   -->
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/questionnaire.css">
+
+</head>
+<body>
+<div class="nav">
+    <div class="nav-context">
+
+        <span class="nav-logo"><img src="../imgs/Logo.png" alt=""></span>
+        <a style="cursor: auto">HR Health Check Report Management System</a>
+    </div>
+</div>
+<div class="main">
+    <div class="main-left" style="background-color: #F4F4F4">
+        <div class="main-left-Allcomponents">
+            <div class="main-left-title" style="cursor: pointer" onclick="questionnaireSubmit()">Create</div>
+            <div class="main-left-components" onclick="addModule()"><div class="main-left-components-space"></div>New Module</div>
+            <div class="main-left-components" onclick="addTrafficLight()"><div class="main-left-components-space" ></div>Traffic light Selection</div>
+            <div class="main-left-components" onclick="addTextAnswer()"><div class="main-left-components-space" ></div>Text Answer ( Only For Cover )</div>
+        </div>
+        <div class=""></div>
+    </div>
+
+    <div class="main-right">
+        <div class="main-rig
+        ht-top">
+            <div class="main-right-top-title">
+                Questionnaire
+            </div>
+        </div>
+        <div class="main-right-down">
+            <div class="main-right-down-table">
+                <div id="main-right-down-table-page">
+
+                </div>
+                <div id="main-right-down-table-pageContext">
+                    <div class="pageContext-box">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/jquery.js"></script>
+<script src="../js/art-template.js"></script>
+<script>
+    var questionnaireCover = {
+        'questionnaireName':'questionnaireName',
+        "description":"description test",
+        "questionnaireHeaders":[
+            "Contact Name:",
+            "Your Company Name:",
+            "Business Sector:",
+            "Number of employees:",
+            "Company Location:",
+            "Contact Job Title:",
+            "Contact Email:",
+            "Contact Telephone:"
+        ]
+    }
+    let currentPage = 0;
+    let options = ["green","amber","red"];
+    let initialPage = [
+        {
+            "moduleName":"",
+            "questions":[
+                {
+                    "question":"",
+                    "options":options
+                }
+            ]
+        }
+    ];
+    var questionnaireBody =
+        [
+            [
+                {
+                    "moduleName":"module1",
+                    "questions":[
+                        {
+                            "question":"question1",
+                            "options":options
+                        },
+                        {
+                            "question":"question2",
+                            "options":options
+                        }
+                    ]
+                }
+            ]
+            ,
+            [
+                {
+                    "moduleName":"module2",
+                    "questions":[
+                        {
+                            "question":"question3",
+                            "options":options
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "moduleName":"module3",
+                    "questions":[
+                        {
+                            "question":"question4",
+                            "options":options
+                        }
+                    ]
+                }
+            ]
+        ];
+    $(function (){
+        var insertHtml = template('pageCoverContext',questionnaireCover);
+        $('#main-right-down-table-pageContext').empty().html(insertHtml);
+        var insertPageHtml = template('top-pageIndex',questionnaireBody);
+        $('#main-right-down-table-page').empty().html(insertPageHtml);
+        pageIndexInitial();
+        $('#pageCover').addClass('page-selected');
+    })
+    function coverStoreData(components,index) {
+        if (components == 'title') {
+            questionnaireCover.questionnaireName = $("input[name='title']").val();
+        }else if (components == 'description') {
+            questionnaireCover.description = $("textarea[name='description']").val();
+        } else {
+            questionnaireCover.questionnaireHeaders[index] = $('#textAnswer'+index).val();
+        }
+    }
+    function deleteTextAnswer(index) {
+        if (index == 0 || index == 1) {
+            return alert('Contact Name and Company Name cannot be deleted')
+        }
+        questionnaireCover.questionnaireHeaders.splice(index,1);
+        let insertHtml = template('pageCoverContext',questionnaireCover);
+        $('#main-right-down-table-pageContext').empty().html(insertHtml);
+    }
+    function deleteTrafficLight(index) {
+        if (index == 0) {
+            return alert('one mudule require at least one question')
+        }
+        questionnaireBody[currentPage-1][0].questions.splice(index,1);
+        let insertHtml = template('pageContext',questionnaireBody[currentPage-1]);
+        $('#main-right-down-table-pageContext').empty().html(insertHtml);
+    }
+    function addTextAnswer() {
+        if (currentPage != 0) {
+            return alert('Text answer can only be implemented in Cover')
+        }
+        questionnaireCover.questionnaireHeaders.push(" ");
+        var insertHtml = template('pageCoverContext',questionnaireCover);
+        $('#main-right-down-table-pageContext').empty().html(insertHtml);
+    }
+    function pageStoreData(current,index) {
+        if (index == -1) {
+            questionnaireBody[current-1][0].moduleName = $("#pageContext-components-moduleName").val();
+        }
+        else {
+            questionnaireBody[current-1][0].questions[index].question = $("#pageContext-question"+index).val();
+        }
+    }
+    function addModule() {
+
+        questionnaireBody.push([
+            {
+                "moduleName":"",
+                "questions":[
+                    {
+                        "question":"",
+                        "options":options
+                    }
+                ]
+            }
+        ]);
+        var insertPageHtml = template('top-pageIndex',questionnaireBody);
+        $('#main-right-down-table-page').empty().html(insertPageHtml);
+        pageIndexInitial();
+        $('.page-selected').removeClass('page-selected');
+        $('#page'+currentPage).addClass('page-selected');
+        if (currentPage == 0) {
+            $('#pageCover').addClass('page-selected');
+        }
+    }
+    function pageIndexInitial (){
+        $('.table-page').on('click', function () {
+            if (this.innerText == 'Cover') {
+                currentPage = 0;
+                let insertHtml = template('pageCoverContext',questionnaireCover);
+                $('#main-right-down-table-pageContext').empty().html(insertHtml);
+            } else {
+                currentPage = parseInt(this.innerText);
+                let pageIndex = parseInt(this.innerText) - 1;
+                let insertHtml = template('pageContext',questionnaireBody[pageIndex]);
+                $('#main-right-down-table-pageContext').empty().html(insertHtml);
+            }
+            $('.page-selected').removeClass('page-selected');
+            $('#page'+currentPage).addClass('page-selected');
+            if (currentPage == 0) {
+                $('#pageCover').addClass('page-selected');
+            }
+        })
+
+    }
+    function addTrafficLight() {
+        if (currentPage == 0) {
+            return alert('Traffic light selection cannot be implemented in Cover')
+        }
+        else {
+            questionnaireBody[currentPage-1][0].questions.push({
+                "question":"question",
+                "options":options
+            });
+            let insertHtml = template('pageContext',questionnaireBody[currentPage-1]);
+            $('#main-right-down-table-pageContext').empty().html(insertHtml);
+        }
+    }
+    function questionnaireSubmit() {
+        questionnaireCover.questionnaireHeaders.splice(0,2);
+        var questionnaire = questionnaireCover;
+        questionnaire.questionnaireBody = questionnaireBody;
+        console.log(questionnaire);
+        let data = JSON.stringify(questionnaire);
+        console.log(data);
+        $.ajax({
+            data: data,
+            url: url + '/questionnaires',
+            type: "post",
+            success: function (res) {
+                if (res.code == 200) {
+                    alert("Create Success");
+                    window.location.href = 'backstage-main-created.html';
+                    console.log(res);
+                }
+            },
+            error: function (res) {
+                alert("Error happened");
+            }
+
+        })
+    }
+</script>
+<script type="text/html" id="pageContext">
+    <div>
+        <div class="module-name pageContext-components">
+            <input type="text" placeholder="Module Name" value="{{$data[0].moduleName}}" onblur="pageStoreData(currentPage,-1)" id="pageContext-components-moduleName">
+        </div>
+        {{each $data[0].questions}}
+            <div class="pageContext-components">
+                <div class="components-name">Traffic light selection {{$index+1}}</div>
+                <input type="text" placeholder="Question" value="{{$value.question}}" onblur="pageStoreData(currentPage,'{{$index}}')" id="pageContext-question{{$index}}">
+                <div class="deleteTextAnswer">
+                    <img src="../imgs/x.png" alt="delete" onclick="deleteTrafficLight('{{$index}}')">
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</script>
+<script type="text/html" id="pageCoverContext">
+    <div id="questionnaireCover-box">
+        <div id="questionnaireCover-questionnaireName" class="pageContext-components">
+            <input type="text" placeholder="Title" value="{{$data.questionnaireName}}" onblur="coverStoreData('title',0)" name="title">
+        </div>
+        <div id="questionnaireCover-questionnaireDescription" class="pageContext-components">
+            <textarea name="description" id="questionnaireCover-questionnaireDescription-textarea" cols="10" rows="4" placeholder="Description" onblur="coverStoreData('description',0)" >{{$data.description}}</textarea>
+        </div>
+        <div id="questionnaireCover-questionnaireHeaders">
+            {{each $data.questionnaireHeaders}}
+            <div >
+                <div class="pageContext-components" >
+                    <div class="components-name" style="">Text Answer {{$index+1}}</div>
+                    <input type="text" placeholder="Title" value="{{$value}}" onblur="coverStoreData('textAnswer','{{$index}}')" id="textAnswer{{$index}}">
+                    <div class="deleteTextAnswer">
+                        <img src="../imgs/x.png" alt="delete" onclick="deleteTextAnswer('{{$index}}')">
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</script>
+<script type="text/html" id="top-pageIndex">
+    <div id="pageCover" class="table-page">Cover</div>
+    {{each $data}}
+        <div class="table-page" id="page{{$index+1}}">{{$index+1}}</div>
+    {{/each}}
+</script>
+
+<script>
+ </script>
+</body>
+</html>

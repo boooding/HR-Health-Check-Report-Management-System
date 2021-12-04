@@ -1,0 +1,137 @@
+.main {
+    background-color: #F0F2F5;
+    width: 1200px;
+    height: 600px;
+    margin: 50px  auto;
+}
+
+.main-left {
+    float: left;
+    width: 216px;
+    height: 600px;
+    background: #FFFFFF;
+}
+.main-right{
+    float: right;
+    width: 984px;
+    background: #F4F6F9;
+    height: 600px;
+
+}
+.box-new-questionnaire {
+    width: auto;
+    height: 100px;
+}
+.new-questionnaire {
+    width: 120px;
+    height: 45px;
+    margin: 25px 47px;
+    border: transparent;
+    border-radius: 5px;
+    color: #FFFFFF;
+    font-size: 16px;
+    background-color: #169BD5;
+}
+
+.box-module {
+    width: 216px;
+}
+
+.module {
+    cursor: pointer;
+    font-size: 14px;
+    width: 216px;
+    height: 48px;
+    line-height: 48px;
+}
+
+.module .module-icon {
+    float: left;
+    width: 38px;
+    height: 48px;
+}
+
+.module-name {
+    color: #5A5A5A;
+}
+
+.selected-module .module-name{
+    background: #E6F7FF;
+    color: #1890FF;
+}
+
+.selected-module .module-right-boundary {
+    float: right;
+    height: 48px;
+    width: 5px;
+    background: #1890FF;
+}
+
+.main-right-top-title {
+    height: 60px;
+    width: 984px;
+    line-height: 60px;
+    margin-left: 30px;
+}
+
+.main-right-down {
+    margin: 0 auto;
+    width: 920px;
+}
+.main-right-down-table-caption {
+    width: 920px;
+    height: 40px;
+    background: #F9F9F9;
+}
+
+.main-right-down-table-caption li {
+    display: inline-block;
+    line-height: 40px;
+    font-size: 14px;
+    color: #A8A8A8;
+}
+.main-right-down-table-caption-1 {
+    position: relative;
+    left: 20px;
+    float: left;
+    width: 200px;
+}
+
+.main-right-down-table-caption-2,
+.main-right-down-table-caption-3,
+.main-right-down-table-caption-4
+{
+    position: relative;
+    left: 20px;
+    float: left;
+    width: 160px;
+}
+.main-right-down-table-caption-5 {
+    position: relative;
+    left: 40px;
+    float: left;
+    width: 100px;
+}
+
+.main-right-down-table-line {
+    width: 920px;
+    height: 39px;
+    line-height: 39px;
+    background: white;
+    border-bottom: 1px solid #E1E7F2;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.main-right-down-table-line .questionnaireName {
+    font-size: 16px;
+}
+
+#main-right-down-table-context {
+    max-height: 500px;
+    overflow: auto;
+}
+
+
+
+
+

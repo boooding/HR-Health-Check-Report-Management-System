@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health Check Service</title>
+    <!--js-->
+    <script src="js/variables.js"></script>
+    <script src="js/art-template.js"></script>
+    <script src="js/jquery.js"></script>
+    <!--css-->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/service_common.css">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/report.css">
+<!--FirstLy, Get the questionnaireList for customer to select-->
+    <!--    Get the questionnaire List-->
+    <script>
+        var pageNumber;
+        var currentNum = 0;
+        var currentPageId = [];
+        var url = 'http://localhost:8080';
+        $.ajax({
+            url: url + '/questionnaires?servicing=true',
+               type: "get",
+               success: function (res) {
+                   if (res.code == 200) {
+                       var insertHtml = template('questionnaireList-selection',res.data);
+                       $('#main-context').html(insertHtml);
+                   }
+               },
+               error: function (res) {
+                   alert("Error Happened");
+               }
+           })
+    </script>
+<!--Secondly, Get the details information-->
+    <!--    initial the data-->
+    <script>
+        var questionnaireInformation;
+        var postData = {
+            "companyName":"",
+            "contactName":"",
+            "headers":{},
+            "content":{}
+        }
+        postData.content = new Map();
+        postData.headers = new Map();
+    </script>
+</head>
+
+<body>
+
+<!-- Fix Header -->
+<div class="header"></div>
+<div class="main" style="height: auto">
+<!--    Fix progress Bar-->
+    <div class="progressBar">
+        <div class="progressBar-background"></div>
+        <div class="progressBar-progress"></div>
+    </div>
+<!--    Box for show information-->
+
+    <div id="main-context">
+
+    </div>
+    <div >
+        <div class="footer">
+            <div class="footer-box">
+                <a href="https://albatel.ie/" target="_blank">Our major page</a>
+                <a href="https://albatel.ie/privacy-policy" target="_blank">Our Privacy Policy</a>
+                <a href="https://www.facebook.com/AlbatelLtd" target="_blank">Facebook</a>
+                <a href="https://www.instagram.com/albatel_ireland/" target="_blank">Instagram</a>
+                <a href="https://www.linkedin.com/company/albatel-ltd/" target="_blank">Linkedin</a>
+                <a href="https://albatel.ie/contact-us" target="_blank">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function getQuestionnaireList() {
+        if ($('input:radio:checked').val()) {
+            $.ajax({
+                url: url + '/questionnaires/' + $('input:radio:checked').val(),
+                type: "get",
+                success: function (res) {
+                    if (res.code == 200) {
+
+                        questionnaireInformation = res.data;
+                        console.log(questionnaireInformation);
+                        //  Cover Construct
+                        var insertHtml = template('questionnaire-cover',questionnaireInformation);
+                        $('#main-context').html(insertHtml);
+                        $('.progressBar-progress').css('width','5%')
+
+                    }
+                },
+                error: function (res) {
+                    alert("Error Happened");
+                }
+            })
+        }
+        else  {
+            alert("Please select your questionnaire")
+        }
+    }
+
+    function coverDataCollect() {
+        let companyName = $('#companyName').val();
+        let contactName = $('#contactName').val();
+        if (companyName.length <= 0 || contactName.length <= 0) {
+            return alert("Please fill All Questions")
+        }
+
+        let headersSelector = document.querySelectorAll('.textAnswer-value-after');
+
+        for (let i = 0; i < headersSelector.length; i++) {
+            if (headersSelector[i].value.length <= 0) {
+                return alert("Please fill All Questions")
+            }
+        }
+        postData.companyName = companyName;
+        postData.contactName = contactName;
+        for (let i = 0; i < headersSelector.length; i++) {
+            let questionId = headersSelector[i].id;
+            let questionValue = headersSelector[i].value;
+            postData.headers.set(questionId,questionValue);
+        }
+        pageNumber = questionnaireInformation.pageNum;
+        currentNum = 0;
+        pageChange();
+    }
+
+    function pageChange() {
+        if (currentNum == 0) {
+            $('.progressBar-progress').css('width','10%')
+        }
+        if (currentNum != 0) {
+            for (let i = 0;i < currentPageId.length;i++) {
+                let id = currentPageId[i];
+                let value = $('input[name='+ id +']:checked').val();
+                postData.content.set(id,value)
+            }
+        }
+        if(currentNum == pageNumber) {
+            console.log(postData);
+            $('.progressBar-progress').css('width','99%')
+            return submitFinialData();
+        } else {
+            currentPageId = []
+            currentNum++;
+            let displayDate = questionnaireInformation.questionnairePages[currentNum].questionnaireModules[0];
+            for (let i = 0;i < displayDate.questions.length; i++) {
+                currentPageId.push(displayDate.questions[i].questionUuid)
+            }
+            var insertHtml = template('questionnaire-details',displayDate);
+            $('#main-context').html(insertHtml);
+        }
+        var percentage =  10 + currentNum * 90 / pageNumber;
+        $('.progressBar-progress').css('width',percentage + '%')
+    }
+
+    function submitFinialData() {
+        const mapChangeObj = (map) => {
+            let obj = {};
+            for(let [k,v] of map) {
+                obj[k] = parseInt(v);
+            }
+            return obj;
+        }
+        const mapChangeObjString = (map) => {
+            let obj = {};
+            for(let [k,v] of map) {
+                obj[k] = v + "";
+            }
+            return obj;
+        }
+        postData.headers = mapChangeObjString(postData.headers);
+        postData.content = mapChangeObj(postData.content);
+        $('#main-context').empty();
+        $.ajax({
+            url: url + '/questionnaires/'+ questionnaireInformation.questionnaireUuid + '/results',
+            type: "post",
+            data: JSON.stringify(postData),
+            success: function (res) {
+                if (res.code == 200) {
+                    alert("Submit Success");
+                    console.log(res);
+                    generatingReport(res.data)
+                }
+            },
+            error: function (res) {
+                alert("Error happened")
+                console.log(postData);
+                console.log(questionnaireInformation.questionnaireUuid)
+            }
+        })
+    }
+
+    function generatingReport(data) {
+        var insertHtml = template('report-title',data);
+        $('#main-context').html(insertHtml);
+        for (let i = 0; i < data.moduleReports.length; i++) {
+            insertHtml = template('report-Module',data.moduleReports[i]);
+            $('#main-context').append(insertHtml)
+        }
+        insertHtml = template('saveReport',data)
+        $('#main-context').append(insertHtml)
+        $(function () {
+            let overallScore = data.reportScore;
+            let overallScore_up = -395 + (overallScore-33) * 300 /66;
+            let overallScore_down = -425 + (overallScore-33) * 300 /66;
+            console.log(overallScore_up);
+            $('#overall_rating>.ratingComponents-up').css('left',overallScore_up+'px');
+            $('#overall_rating>.ratingComponents-down').css('left',overallScore_down+'px');
+        })
+    }
+
+</script>
+
+<!--Template-->
+<!--No.1 QuestionnaireList Selection-->
+<script type="text/html" id="questionnaireList-selection">
+    <div class="note">
+        <h2>Choose the questionnaire suitable for you</h2>
+    </div>
+    {{each $data}}
+    <div class="questionnaire-option">
+        <input type="radio" name="questionnaire-id" value="{{$value.uuid}}">
+        <div class="" id="{{$value.uuid}}" style="display: inline-block">{{$value.name}}</div>
+    </div>
+    {{/each}}
+    <div id="getQuestionnaireList-btn-box"><input type="button" onclick="getQuestionnaireList()" value="Next" id="getQuestionnaireList-btn"></div>
+</script>
+
+<!--No.2 QuestionnaireDetails-->
+<script type="text/html" id="questionnaire-cover">
+    <div class="note">
+        <h2>{{$data.questionnaireName}}</h2>
+        <div id="description" style="padding-top: 20px">{{$data.description}}</div>
+        <div class="textAnswer">
+            <p style="float: left">Your Company Name</p>
+            <div>
+                <input type="text" placeholder="Fill your information" class="textAnswer-value" id="companyName">
+            </div>
+        </div >
+        <div class="textAnswer">
+            <p style="float: left">Contact Name</p>
+            <div>
+                <input type="text" placeholder="Fill your information" class="textAnswer-value" id="contactName">
+            </div>
+        </div>
+        {{each $data.questionnairePages[0].questionnaireModules[0].questions}}
+        <div class="textAnswer">
+            <p style="float: left">{{$value.question}}</p>
+            <div>
+                <input type="text" placeholder="Fill your information" class="textAnswer-value textAnswer-value-after" id="{{$value.questionUuid}}">
+            </div>
+        </div>
+        {{/each}}
+        <div><input type="button" value="Next" onclick="coverDataCollect()"></div>
+
+    </div>
+</script>
+<script type="text/html" id="questionnaire-details">
+    <div class="note">
+        <div class="explain">
+            <div>
+                <input id="id1" type="radio" class="trafficLight-red" checked="checked" >
+                <label for="id1">&nbsp&nbsp My business has this in place / I am happy with our approach / I feel that I have sufficient knowledge</label>
+            </div>
+            <br>
+            <input id="id2" type="radio" class="trafficLight-green" checked="checked">
+            <label for="id2">&nbsp&nbsp My business has something in place, but I feel it could be improved / I feel that I would need some support if this situation arose</label>
+            <br>
+            <input id="id3" type="radio" class="trafficLight-amber" checked="checked">
+            <label for="id3">&nbsp&nbsp My business does not have provision for this / I feel unprepared for this situation</label>
+        </div>
+        <div class="cleanFloat"></div>
+        <h2>{{$data.moduleName}}</h2>
+        {{each $data.questions}}
+        <div class="trafficLight">
+            <div>
+                <p style="float: left;line-height: 30px">{{$index+1}}.{{$value.question}}</p>
+            </div>
+            <div class="cleanFloat"></div>
+            <div style="float: left;padding-top: 10px">
+                <div style="padding-left: 30px;display: inline-block">
+                    <input type="radio" name="{{$value.questionUuid}}" class="trafficLight-green" id="{{$value.questionUuid}}1" value="3" checked="checked">
+                    <label for="{{$value.questionUuid}}1">&nbsp&nbsp Green</label>
+                </div>
+                <div style="padding-left: 30px;display: inline-block">
+                    <input type="radio" name="{{$value.questionUuid}}" class="trafficLight-amber" id="{{$value.questionUuid}}2" value="2">
+                    <label for="{{$value.questionUuid}}2">&nbsp&nbsp Amber</label>
+                </div>
+                <div style="padding-left: 30px;display: inline-block">
+                    <input type="radio" name="{{$value.questionUuid}}" class="trafficLight-red" id="{{$value.questionUuid}}3" value="1">
+                    <label for="{{$value.questionUuid}}3">&nbsp&nbsp Red</label>
+                </div>
+            </div>
+        </div>
+        <div class="cleanFloat"></div>
+        {{/each}}
+
+        <div><input type="button" value="Next" onclick="pageChange()"></div>
+
+    </div>
+</script>
+
+<!--No.3 Report-->
+<script type="text/html" id="report-title">
+    <div class="report-logo" style="margin-left: 100px">
+        <img src="report-logo.jpeg" alt="">
+    </div>
+    <div class="report-title-box" style="margin-left: 100px">
+        <h1 class="report-title">{{$data.questionnaireName}}</h1>
+        <h1>Report</h1>
+    </div>
+    <!--    Company information-->
+    <div class="report-companyInformation report-partBox">
+        <h1 class="report-partTitle">Company information</h1>
+        <div class="report-companyInformation-box">
+            <div>Company Name :</div>
+            <div>{{$data.companyName}}</div>
+        </div>
+        <div class="report-companyInformation-box">
+            <div>Contact Name :</div>
+            <div>{{$data.contactName}}</div>
+        </div>
+        {{each $data.header}}
+        <div class="report-companyInformation-box">
+            <div>{{$index}} :</div>
+            <div>{{$value}}</div>
+        </div>
+        {{/each}}
+    </div>
+
+    <!--        Overall rating-->
+    <div class="report-partBox">
+        <h1 class="report-partTitle">Overall Rating</h1>
+        <div>
+            <div class="ratingComponents-evaluation">
+                <div>Fair</div>
+                <div>Good</div>
+                <div>Excellent</div>
+            </div>
+            <div class="ratingComponents" >
+                <span><img src="imgs/RatingComponents.png" alt="" class="ratingImg"></span>
+                <div id="overall_rating">
+                    <img class="ratingComponents-up" src="imgs/up.png" >
+                    <img class="ratingComponents-down" src="imgs/down.png" >
+                </div>
+            </div>
+            <div class="clearFloat"></div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="report-Module">
+    <div class="report-partBox">
+        <h4>{{$data.moduleName}} - overall</h4>
+        <div>
+            <div class="ratingComponents-evaluation" style="position:relative; top: 20px">
+                <div>Fair</div>
+                <div>Good</div>
+                <div>Excellent</div>
+            </div>
+            <div class="clearFloat"></div>
+        </div>
+    </div>
+    {{each $data.questionData}}
+    <div class="report-partBox">
+        <h6 style="padding-bottom: 10px">{{$value.question}}:</h6>
+        <div>
+            <div class="ratingComponents" >
+                <span><img src="imgs/RatingComponents.png" alt="" class="ratingImg"></span>
+                <div>
+                    <img class="ratingComponents-up up{{$value.score}}" src="imgs/up.png" >
+                    <img class="ratingComponents-down down{{$value.score}}" src="imgs/down.png" >
+                </div>
+            </div>
+            <div class="clearFloat"></div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<script type="text/html" id="saveReport">
+    <div onClick="window.print()" style="font-size: 50px">
+        <button style="margin-left: 280px">Save Report</button>
+    </div>
+</script>
+</body>
+</html>

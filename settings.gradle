@@ -1,0 +1,3 @@
+rootProject.name = 'hr-health-check'
+include(':server')
+include(':scripts')

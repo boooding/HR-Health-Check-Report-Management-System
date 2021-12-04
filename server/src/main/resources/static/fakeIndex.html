@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health Check Service</title>
+    <!--js-->
+    <script src="js/variables.js"></script>
+    <script src="js/art-template.js"></script>
+    <script src="js/jquery.js"></script>
+    <!--css-->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/service_common.css">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/report.css">
+
+
+</head>
+
+<body>
+
+<div class="header"></div>
+<div class="main" style="height: auto">
+    <div id="main-context">
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var loc = location.href;
+        var n1 = loc.length;
+        var n2 = loc.indexOf("?");
+        var parameter = decodeURI(loc.substr(n2+1, n1-n2));
+        var id = parameter.substr(3);
+        $.ajax({
+            url: 'http://localhost:8080/questionnaires/reports/' + id,
+            type: 'get',
+            success: function (res) {
+                if (res.code == 200) {
+                    generatingReport(res.data);
+                    console.log(res.data);
+                }
+            },
+            error: function () {
+                alert("error happened")
+            }
+        })
+    })
+    function generatingReport(data) {
+        var insertHtml = template('report-title',data);
+        $('#main-context').html(insertHtml);
+        for (let i = 0; i < data.moduleReports.length; i++) {
+            insertHtml = template('report-Module',data.moduleReports[i]);
+            $('#main-context').append(insertHtml)
+        }
+        insertHtml = template('saveReport',data)
+        $('#main-context').append(insertHtml)
+        $(function () {
+            let overallScore = data.reportScore;
+            let overallScore_up = -395 + (overallScore-33) * 300 /66;
+            let overallScore_down = -425 + (overallScore-33) * 300 /66;
+            console.log(overallScore_up);
+            $('#overall_rating>.ratingComponents-up').css('left',overallScore_up+'px');
+            $('#overall_rating>.ratingComponents-down').css('left',overallScore_down+'px');
+        })
+    }
+
+</script>
+
+<!--No.3 Report-->
+<script type="text/html" id="report-title">
+    <div class="report-logo" style="margin-left: 100px">
+        <img src="report-logo.jpeg" alt="">
+    </div>
+    <div class="report-title-box" style="margin-left: 100px">
+        <h1 class="report-title">{{$data.questionnaireName}}</h1>
+        <h1>Report</h1>
+    </div>
+    <!--    Company information-->
+    <div class="report-companyInformation report-partBox">
+        <h1 class="report-partTitle">Company information</h1>
+        <div class="report-companyInformation-box">
+            <div>Company Name :</div>
+            <div>{{$data.companyName}}</div>
+        </div>
+        <div class="report-companyInformation-box">
+            <div>Contact Name :</div>
+            <div>{{$data.contactName}}</div>
+        </div>
+        {{each $data.header}}
+        <div class="report-companyInformation-box">
+            <div>{{$index}} :</div>
+            <div>{{$value}}</div>
+        </div>
+        {{/each}}
+    </div>
+
+    <!--        Overall rating-->
+    <div class="report-partBox">
+        <h1 class="report-partTitle">Overall Rating</h1>
+        <div>
+            <div class="ratingComponents-evaluation">
+                <div>Fair</div>
+                <div>Good</div>
+                <div>Excellent</div>
+            </div>
+            <div class="ratingComponents" >
+                <span><img src="imgs/RatingComponents.png" alt="" class="ratingImg"></span>
+                <div id="overall_rating">
+                    <img class="ratingComponents-up" src="imgs/up.png" >
+                    <img class="ratingComponents-down" src="imgs/down.png" >
+                </div>
+            </div>
+            <div class="clearFloat"></div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="report-Module">
+    <div class="report-partBox">
+        <h4>{{$data.moduleName}} - overall</h4>
+        <div>
+            <div class="ratingComponents-evaluation" style="position:relative; top: 20px">
+                <div>Fair</div>
+                <div>Good</div>
+                <div>Excellent</div>
+            </div>
+            <div class="clearFloat"></div>
+        </div>
+    </div>
+    {{each $data.questionData}}
+    <div class="report-partBox">
+        <h6 style="padding-bottom: 10px">{{$value.question}}:</h6>
+        <div>
+            <div class="ratingComponents" >
+                <span><img src="imgs/RatingComponents.png" alt="" class="ratingImg"></span>
+                <div>
+                    <img class="ratingComponents-up up{{$value.score}}" src="imgs/up.png" >
+                    <img class="ratingComponents-down down{{$value.score}}" src="imgs/down.png" >
+                </div>
+            </div>
+            <div class="clearFloat"></div>
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<script type="text/html" id="saveReport">
+    <div onClick="window.print()" style="font-size: 50px">
+        <button style="margin-left: 280px">Save Report</button>
+    </div>
+</script>
+</body>
+</html>

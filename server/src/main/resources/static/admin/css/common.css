@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.fl {
+    float: left;
+}
+.fl {
+    float: right;
+}
+.w {
+    width: 1200px;
+    margin: 0 auto;
+}
+

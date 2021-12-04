@@ -1,0 +1,157 @@
+:root {
+    --service-background-color : #F2F2F2;
+    --service-main-color: white;
+}
+
+body {
+    background: var(--service-background-color);
+}
+.main {
+    background: var(--service-main-color);
+    padding-top: 20px;
+    width: 1000px;
+    margin: 0 auto;
+}
+.header {
+    margin-top: 50px;
+}
+.progressBar {
+    width: 80%;
+    height: 40px;
+    margin: 0 auto;
+}
+.progressBar div {
+    height: 10px;
+    border-radius: 10px;
+}
+.progressBar-background {
+    height: 20px;
+    border-radius: 10px;
+    width: 800px;
+    background-color: #F3F3F3;
+}
+.progressBar-progress {
+    float: left;
+    height: 10px;
+    border-radius: 10px;
+    width: 3%;
+    background-color: #1890FF;
+    position: relative;
+    top: -10px;
+    transition: 2s;
+}
+
+#main-context {
+    width: 800px;
+    margin: 0 auto;
+    padding-bottom: 100px;
+}
+.note {
+    text-align: center;
+}
+.questionnaire-option {
+    padding-top: 10px;
+    text-align: center;
+}
+#getQuestionnaireList-btn {
+    width: 100px;
+    height: 30px;
+    font-size: 16px;
+    border: none;
+    color: white;
+    background-color: #1990FF;
+    border-radius: 5px;
+    margin: 0 auto;
+}
+#getQuestionnaireList-btn-box {
+    padding-top: 50px;
+    width: 100px;
+    height: 30px;
+    margin: 0 auto;
+}
+#name {
+    text-align: center;
+}
+
+.textAnswer {
+    padding-top: 20px;
+}
+
+.textAnswer input {
+    margin-top: 20px;
+    padding-left: 20px;
+    width: 800px;
+    height: 40px;
+}
+.nextPage {
+    text-align: center;
+    margin-top: 50px;
+    margin-left: 315px;
+    width: 170px;
+    height: 35px;
+    border: none;
+    background-color: #169BD5;
+    color: whitesmoke;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.note input[type='radio'] {
+    position: absolute;
+    clip: rect(0,0,0,0);
+}
+.note input[type='radio'] {
+    position: absolute;
+    clip: rect(0,0,0,0);
+}
+.note input[type='radio'] + label::before{
+    content:'';
+    background: url("../imgs/radio-0.png");
+    background-size: cover;
+    width:30px;
+    height:30px;
+    float: left;
+}
+.note input[type='radio']:checked + label::before{
+    background-clip: content-box;
+    background-size: cover;
+    width:30px;
+    height:30px;
+}
+.note {
+    padding-top: 20px;
+}
+.note .trafficLight-red:checked + label::before{
+    background: url("../imgs/radio-red.png");
+}
+.note .trafficLight-green:checked + label::before{
+    background: url("../imgs/radio-green.png");
+}
+.note .trafficLight-amber:checked + label::before{
+    background: url("../imgs/radio-amber.png");
+}
+
+.explain {
+    font-size: 14px;
+}
+.explain label,
+.trafficLight label{
+    float: left;
+    line-height: 30px;
+}
+.cleanFloat {
+    clear: both;
+    padding-bottom: 10px;
+}
+
+.footer {
+    width: 80%;
+    margin: 0 auto;
+}
+.footer a {
+    padding-right: 20px;
+}
+.footer-box {
+    margin: 0 auto;
+}

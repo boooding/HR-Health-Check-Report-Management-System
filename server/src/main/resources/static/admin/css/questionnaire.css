@@ -1,0 +1,147 @@
+.main-left-Allcomponents {
+    width: 90%;
+    margin: 10px auto;
+}
+
+.main-left-title,
+.main-left-components {
+    font-size: 12px;
+    margin-top: 20px;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    border: 1px solid #D7D7D7;
+    border-collapse: collapse;
+    background-color: white ;
+}
+.main-left-components-space {
+    display: inline-block;
+    width: 20px;
+    height: 10px;
+}
+.main-left-title {
+    width: 50%;
+    border: none;
+    font-size: 16px;
+    text-align: center;
+    color: #FFFFFF;
+    background-color: #489DE6;
+    margin: 10px auto;
+}
+.main-left-components {
+    cursor: pointer;
+}
+
+#main-right-down-table-page {
+    width: 920px;
+    height: 30px;
+
+}
+
+.table-page {
+    float: left;
+    height: 28px;
+    width: 33px;
+    border: 1px solid #E0E0E0;
+    border-collapse: collapse;
+    text-align: center;
+    line-height: 28px;
+    font-size: 14px;
+    background-color: #fafafa;
+    cursor: pointer;
+}
+#pageCover {
+    width: 56px;
+}
+.Add {
+    width: 20px;
+    float: right;
+}
+.main-right {
+    background-color: #F0F0F0;
+}
+.page-selected {
+    background-color: white;
+    border-bottom: none;
+    height: 29px;
+}
+
+#main-right-down-table-pageContext {
+    width: 918px;
+    overflow: auto;
+    overflow-x: hidden;
+    max-height: 500px;
+    height: 500px;
+    background-color: white;
+    border: 1px solid #E0E0E0;
+    border-top: none;
+}
+
+.pageContext-box {
+    width: 918px;
+    max-width: 918px;
+    margin: 30px auto;
+    height: 200px;
+}
+
+
+.pageContext-components input,
+.pageContext-components textarea
+{
+    border: none;
+    width: 80%;
+    margin: 10px 10%;
+    font-size: 16px;
+    line-height: 40px;
+}
+.pageContext-components input:hover,
+.pageContext-components textarea:hover {
+    background-color: white;
+}
+.pageContext-components:hover
+{
+    border-top: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
+    background-color: #FAFAFA;
+}
+.pageContext-components:hover img
+{
+    visibility: visible;
+}
+#questionnaireCover-questionnaireName input,
+.module-name input
+{
+    text-align: center;
+    font-size: 24px;
+    height: 45px;
+    line-height: 45px;
+}
+.components-name {
+    position: relative;
+    top: 15px;
+    left: 90px;
+    padding-bottom: 20px;
+    font-size: 14px;
+}
+.pageContext-components input,
+.pageContext-components textarea
+{
+    padding-left: 20px;
+}
+
+#questionnaireCover-questionnaireDescription-textarea {
+
+}
+#questionnaireCover-box {
+    padding-bottom: 40px;
+}
+.deleteTextAnswer img {
+    float: right;
+    position: relative;
+    top: -65px;
+    left: -20px;
+    visibility: hidden;
+    height: 25px;
+    cursor: pointer;
+}
+

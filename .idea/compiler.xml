@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.20/18bcea7d5df4d49227b4a0743a536208ce4825bb/lombok-1.18.20.jar" />
+        </processorPath>
+        <module name="hr-health-check.server.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="13">
+      <module name="hr-health-check.buildSrc" target="13" />
+      <module name="hr-health-check.buildSrc.main" target="13" />
+      <module name="hr-health-check.buildSrc.test" target="13" />
+      <module name="hr-health-check.main" target="13" />
+      <module name="hr-health-check.scipts" target="13" />
+      <module name="hr-health-check.scipts.main" target="13" />
+      <module name="hr-health-check.scipts.test" target="13" />
+      <module name="hr-health-check.test" target="13" />
+      <module name="server" target="13" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="hr-health-check" options="" />
+      <module name="server" options="-parameters" />
+    </option>
+  </component>
+</project>

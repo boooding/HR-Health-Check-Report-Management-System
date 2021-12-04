@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--  Import the icon/logo  -->
+    <link rel="shortcut icon" href="favicon.ico" >
+    <!--  css stylesheet   -->
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/main.css">
+
+</head>
+<body>
+<div class="nav">
+    <div class="nav-context">
+        <span class="nav-logo"><img src="../imgs/Logo.png" alt=""></span>
+        <a style="cursor: auto">HR Health Check Report Management System</a>
+    </div>
+</div>
+<div class="main">
+    <div class="main-left ">
+        <!--            Button- Create New Questionnaire -->
+        <div class="box-new-questionnaire">
+            <button class="new-questionnaire" onclick="newQuestionnaire()"> New + </button>
+        </div>
+        <!--        Components-->
+        <div class="box-module">
+            <div class="selected-module module">
+                <div class="module-right-boundary"></div>
+                <div class="module-icon"><img src="" alt=""></div>
+                <div class="module-name">Created Questionnaire</div>
+
+            </div>
+            <div class="module" onclick="window.location.href = 'backstage-main-collected.html'">
+                <div class="module-right-boundary"></div>
+                <div class="module-icon"><img src="" alt=""></div>
+                <div class="module-name">Collected Questionnaire</div>
+            </div>
+        </div>
+    </div>
+    <!--        Content inner Components-->
+    <div class="main-right">
+        <div class="main-right-top">
+            <div class="main-right-top-title">
+                Created Questionnaire
+            </div>
+        </div>
+        <div class="main-right-down">
+            <div class="main-right-down-table">
+                <div class="main-right-down-table-caption">
+                    <ul>
+                        <li class="main-right-down-table-caption-1">Questionnaire Name</li>
+                        <li class="main-right-down-table-caption-2">Status</li>
+                        <li class="main-right-down-table-caption-3">Created time</li>
+                        <li class="main-right-down-table-caption-5">Operation</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul id="main-right-down-table-context">
+                        <li>
+                            <div class="main-right-down-table-line"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/jquery.js"></script>
+<script src="../js/art-template.js"></script>
+
+<script>
+
+
+    $(function () {
+        template.defaults.imports.dateFormat = function (dtStr) {
+            let dt = new Date(dtStr)
+            let y = dt.getFullYear()
+            let m = dt.getMonth()+1;
+            let d = dt.getDate();
+            return d + '/' + m + '/' + y;
+        }
+        // let url = 'http://localhost:8080';
+        $.ajax({
+            url: url + '/questionnaires',
+            type: 'get',
+            success: function (res) {
+                if (res.code == 200) {
+                    var insertHtml = template('template-questionnaireList',res);
+                    $('#main-right-down-table-context').html(insertHtml);
+                }
+            },
+            error: function () {
+                alert("error happened")
+            }
+        })
+    })
+</script>
+
+<script type="text/html" id="template-questionnaireList">
+    {{each data}}
+    <li>
+        <div class="main-right-down-table-line">
+            <div class="questionnaireName main-right-down-table-caption-1">{{$value.name}}</div>
+            <div class="service main-right-down-table-caption-2">{{$value.servicing}}</div>
+            <div class="createdTime main-right-down-table-caption-3">{{$value.createTime | dateFormat }}</div>
+            <div class="Operation main-right-down-table-caption-5">
+                <button onclick="deleteQuestionnaire('{{$value.uuid}}')">Delete</button>
+            </div>
+        </div>
+    </li>
+    {{/each}}
+
+</script>
+<script>
+
+</script>
+<script>
+
+    function deleteQuestionnaire(id) {
+        if (confirm("Are you sure to Delete?")) {
+            $.ajax({
+                url: url + '/questionnaires/' + id,
+                type: 'delete',
+                success: function (res) {
+                    if (res.code == 200) {
+                        alert('delete success')
+                        $.ajax({
+                            url: url + '/questionnaires',
+                            type: 'get',
+                            success: function (res) {
+                                if (res.code == 200) {
+                                    var insertHtml = template('template-questionnaireList',res);
+                                    $('#main-right-down-table-context').html(insertHtml);
+                                }
+                            },
+                            error: function () {
+                                alert("error happened")
+                            }
+                        })
+                    }
+                },
+                error: function () {
+                    alert("error happened")
+                }
+            })
+        }
+    }
+    function newQuestionnaire() {
+        window.location.href = 'backstage-questionnaire.html';
+    }
+</script>
+</body>
+</html>
+

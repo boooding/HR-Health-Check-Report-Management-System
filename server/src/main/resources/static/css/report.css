@@ -1,0 +1,74 @@
+.report-title-box h1 {
+    padding-top: 30px;
+    font-size: 50px;
+}
+
+.report-partTitle {
+    color: darkgrey;
+}
+.report-partBox {
+    padding-top: 50px;
+    margin-left: 100px;
+}
+
+.report-companyInformation-box div {
+    font-size: 24px;
+    display: inline-block;
+    padding-top: 15px;
+}
+.ratingComponents {
+    width: 600px;
+}
+.ratingComponents span .ratingImg{
+
+    float: left;
+    width: 450px;
+    height: 30px;
+}
+
+.ratingComponents img {
+    float: left;
+    width: 30px;
+}
+.ratingComponents-up {
+    position: relative;
+    top: 13px;
+    left: -395px;
+    transition: 1s;
+}
+.ratingComponents-down {
+    position: relative;
+    top: -13px;
+    left: -425px;
+    transition: 1s;
+
+}
+.ratingComponents-evaluation div {
+    float: left;
+    text-align: center;
+    display: inline-block;
+    width: 150px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+.up33 {
+    left: -395px;
+}
+.down33 {
+    left: -425px;
+}
+.up66 {
+    left: -245px;
+}
+.down66 {
+    left: -275px;
+}
+.up99 {
+    left: -95px;
+}
+.down99 {
+    left: -125px;
+}
+.clearFloat {
+    clear: both;
+}

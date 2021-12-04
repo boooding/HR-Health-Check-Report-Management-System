@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--  Import the icon/logo  -->
+    <link rel="shortcut icon" href="favicon.ico" >
+    <!--  css stylesheet   -->
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/main.css">
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/art-template.js"></script>
+    <script>
+        var resultsData;
+        $.ajax({
+            url: url + '/questionnaires/results',
+            type: 'get',
+            success: function (res) {
+                if (res.code == 200) {
+                    resultsData = res.data.results;
+                    var insertHtml = template('template-questionnaireList',resultsData);
+                    $('#main-right-down-table-context').html(insertHtml);
+                }
+            },
+            error: function () {
+                alert("error happened")
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="nav">
+    <div class="nav-context">
+        <span class="nav-logo"><img src="../imgs/Logo.png" alt=""></span>
+        <a style="cursor: auto">HR Health Check Report Management System</a>
+    </div>
+</div>
+<div class="main">
+    <div class="main-left ">
+        <!--            Button- Create New Questionnaire -->
+        <div class="box-new-questionnaire" onclick="window.location.href = 'backstage-questionnaire.html'">
+            <button class="new-questionnaire" > New + </button>
+        </div>
+        <!--        Components-->
+        <div class="box-module">
+            <div class=" module" onclick="window.location.href = 'backstage-main-created.html'">
+                <div class="module-right-boundary" ></div>
+                <div class="module-icon"><img src="" alt=""></div>
+                <div class="module-name">Created Questionnaire</div>
+            </div>
+            <div class="selected-module module">
+                <div class="module-right-boundary"></div>
+                <div class="module-icon"><img src="" alt=""></div>
+                <div class="module-name">Collected Questionnaire</div>
+            </div>
+        </div>
+    </div>
+    <!--        Content inner Components-->
+    <div class="main-right">
+        <div class="main-right-top">
+            <div class="main-right-top-title">
+                Collected Questionnaire
+            </div>
+            <div class="main-right-down">
+                <div class="main-right-down-table">
+                    <div class="main-right-down-table-caption">
+                        <ul>
+                            <li class="main-right-down-table-caption-1">Questionnaire Name</li>
+                            <li class="main-right-down-table-caption-2">Company Name</li>
+                            <li class="main-right-down-table-caption-3">Contact Name</li>
+                            <li class="main-right-down-table-caption-4">Submit Time</li>
+                            <li class="main-right-down-table-caption-5">Operation</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul id="main-right-down-table-context">
+                            <li>
+                                <div class="main-right-down-table-line"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function jumpToCreation() {
+        window.location.href = 'backstage-questionnaire.html';
+    }
+    $(function () {
+        template.defaults.imports.dateFormat = function (dtStr) {
+            let dt = new Date(dtStr)
+            let y = dt.getFullYear()
+            let m = dt.getMonth()+1;
+            let d = dt.getDate();
+            return d + '/' + m + '/' + y;
+        };
+    })
+    function questionnaireDetailsOpen(id) {
+        window.location.href = "../../fakeIndex.html?" + "id=" + id;
+    }
+</script>
+
+<script type="text/html" id="template-questionnaireList">
+    {{each $data}}
+    <li>
+        <div class="main-right-down-table-line">
+            {{if $value.questionnaireName == null}}
+            <div class="questionnaireName main-right-down-table-caption-1">-</div>
+            {{/if}}
+            <div class="questionnaireName main-right-down-table-caption-1">{{$value.questionnaireName}}</div>
+            <div class="service main-right-down-table-caption-2">{{$value.companyName}}</div>
+            <div class="createdTime main-right-down-table-caption-3">{{$value.contactName}}</div>
+            <div class="createdTime main-right-down-table-caption-4">{{$value.createTime | dateFormat}}</div>
+            <div class="Operation main-right-down-table-caption-5">
+                <button onclick="questionnaireDetailsOpen('{{$value.uuid}}')">Details</button>
+            </div>
+        </div>
+    </li>
+    {{/each}}
+</script>
+</body>
+</html>

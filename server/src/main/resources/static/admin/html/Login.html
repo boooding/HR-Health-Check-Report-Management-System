@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="shortcut icon" href="favicon.ico" >
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/login.css">
+
+</head>
+<body>
+    <div class="main">
+        <div class="header"></div>
+        <div class="main">
+            <div class="login-logo">
+                <img src="../imgs/logo_login.png" alt="">
+            </div>
+            <div class="slogan">Putting a HR Expert on your Team</div>
+            <div class="slogan">HR Health Check Report Management System</div>
+            <div class="login">
+                <form id="login-form">
+                    <input type="text" placeholder="Account" id="login-account" style="text-align: center" name="account">
+                    <input type="password" placeholder="Password" id="login-password" style="text-align: center" name="password">
+                    <div id="login-btn-box">
+                        <input type="submit" value="Login" id="login-btn" >
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="../js/jquery.js"></script>
+    <script>
+        // let url = 'http://localhost:8080';
+        $(function () {
+            $('#login-form').submit(function (e) {
+                e.preventDefault();
+                let data = $(this).serialize();
+                $.ajax({
+                    data: data,
+                    url: url + '/page/login',
+                    type: "post",
+                    success: function (res) {
+                        if (res.code == 200) {
+                            window.location.href = 'backstage-main-created.html';
+                            alert("Login sucess")
+                        }
+                    },
+                    error: function (res) {
+                        alert("Account or Password Error");
+                    }
+
+                })
+            })
+        })
+
+    </script>
+</body>
+</html>

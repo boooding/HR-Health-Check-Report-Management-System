@@ -1,0 +1,30 @@
+.nav {
+    height: 50px;
+    background-color: #E8EFF5;
+}
+
+.nav a {
+    font-size: 14px;
+    color: black;
+    height: 50px;
+    display: inline-block;
+    padding: 0 20px;
+    line-height: 50px;
+    border: 1px solid transparent;
+}
+
+.nav img {
+    width: 106px;
+    height: 32px;
+}
+
+
+.nav-context {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+
+.selectedNav {
+    color: #F7F7F7;
+}

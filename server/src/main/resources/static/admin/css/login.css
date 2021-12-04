@@ -1,0 +1,72 @@
+
+
+body {
+    background-image: url('../imgs/login_background.png');
+    background-size: 100%;
+}
+
+.main {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.main .header {
+    height: 150px;
+}
+
+.login-logo {
+    width: 250px;
+    margin: 0 auto;
+}
+
+.login-logo img {
+    width: 250px;
+    margin: 0 auto;
+}
+
+.slogan {
+    padding-top: 20px;
+    font-size: 16px;
+    color: black;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login {
+    padding-top: 20px;
+}
+
+#login-account,
+#login-password
+{
+    margin-top: 20px;
+    width: 400px;
+    height: 35px;
+    border: none;
+}
+
+input::placeholder {
+    padding-left: 10px;
+}
+
+#login-btn {
+    margin: 0 auto;
+}
+
+#login-btn-box {
+    padding-top: 40px;
+    width: 300px;
+    margin: 0 auto;
+}
+
+#login-btn {
+    cursor: pointer;
+    width: 300px;
+    height: 35px;
+    border: none;
+    background: #1890FF;
+    border-radius: 5px;
+    color: white;
+}
+
+

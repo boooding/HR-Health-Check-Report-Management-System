@@ -1,0 +1,20 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: utf-8
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: true
+    generate-ddl: true
+    database: mysql
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:13306}/hr_health_check?serverTimezone=Asia/Shanghai
+    username: ${DATABASE_USERNAME:czm}
+    password: ${DATABASE_PWD:123}
+    initialization-mode: always
